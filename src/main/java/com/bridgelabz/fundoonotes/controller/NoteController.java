@@ -2,6 +2,7 @@ package com.bridgelabz.fundoonotes.controller;
 
 import com.bridgelabz.fundoonotes.entity.Note;
 import com.bridgelabz.fundoonotes.service.NoteService;
+import com.bridgelabz.fundoonotes.dto.request.NoteRequestDto;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +22,10 @@ public class NoteController {
     // 🔥 Create Note
     @PostMapping
     public ResponseEntity<Note> createNote(
-            @RequestBody Note note,
+            @RequestBody NoteRequestDto dto,
             @RequestHeader("Authorization") String token) {
 
-        return ResponseEntity.ok(noteService.createNote(note, token));
+        return ResponseEntity.ok(noteService.createNote(dto, token));
     }
 
     // 🔥 Get Notes

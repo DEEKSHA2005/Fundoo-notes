@@ -1,43 +1,19 @@
-package com.bridgelabz.fundoonotes.entity;
+package com.bridgelabz.fundoonotes.dto.request;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity
-@Table(name = "notes")
-public class Note {
+public class NoteRequestDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
     private String title;
-
     private String description;
-
     private boolean pinned;
     private boolean archived;
     private boolean trashed;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
-    private User user;
-
-    @Column(name = "reminder_time")
+    // 🔥 For Reminder Feature
     private LocalDateTime reminderTime;
 
-    // getters and setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // 🔹 Getters & Setters
 
     public String getTitle() {
         return title;
@@ -79,15 +55,11 @@ public class Note {
         this.trashed = trashed;
     }
 
-    public User getUser() {
-        return user;
+    public LocalDateTime getReminderTime() {
+        return reminderTime;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setReminderTime(LocalDateTime reminderTime) {
+        this.reminderTime = reminderTime;
     }
-
-    public LocalDateTime getReminderTime() { return reminderTime; }
-
-    public void setReminderTime(LocalDateTime reminderTime) { this.reminderTime = reminderTime; }
 }

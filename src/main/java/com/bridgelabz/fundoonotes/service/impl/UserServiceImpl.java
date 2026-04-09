@@ -8,6 +8,7 @@ import com.bridgelabz.fundoonotes.entity.User;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.service.UserService;
 import com.bridgelabz.fundoonotes.util.TokenUtil;
+import com.bridgelabz.fundoonotes.service.RedisService;
 
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final TokenUtil tokenUtil;
+    private final RedisService redisService;
+    private final MessageProducer messageProducer;
 
-    public UserServiceImpl(UserRepository userRepository, TokenUtil tokenUtil) {
+    public UserServiceImpl(UserRepository userRepository,
+                           TokenUtil tokenUtil,
+                           RedisService redisService,
+                           MessageProducer messageProducer) {
+
         this.userRepository = userRepository;
         this.tokenUtil = tokenUtil;
+        this.redisService = redisService;
+        this.messageProducer = messageProducer;
     }
 
     @Override
@@ -39,6 +48,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(requestDto.getPassword());
 
         User savedUser = userRepository.save(user);
+
+        messageProducer.sendMessage("User Registered: " + savedUser.getEmail());
 
         return new UserResponseDto(
                 savedUser.getId(),
@@ -58,6 +69,8 @@ public class UserServiceImpl implements UserService {
         }
 
         String token = tokenUtil.generateToken(user.getId());
+
+        redisService.saveToken(token, user.getId());
 
         return new LoginResponseDto(token, "Login successful");
     }
